@@ -5,6 +5,7 @@ enum State {
   STATE_INIT,       //初期状態
   STATE_EXIST,      //人が存在
   STATE_GONE,       //人がいなくなった
+  STATE_EXIST_PENDIG, //人が存在する疑い
   STATE_SLEEP       //人が来るまでスリープ
 } state;
 

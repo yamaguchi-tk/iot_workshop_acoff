@@ -31,13 +31,23 @@ enum State handleEvent(enum State s, enum Event e) {
         Serial.println("handleEvent ret:STATE_SLEEP");
         stopTimer();
         ret = STATE_SLEEP;
-      } else if (e == EVENT_PIR_STATE_ON) { // 再度人を検知
-        Serial.println("handleEvent ret:STATE_EXIST");
-        stopTimer();
-        ret = STATE_EXIST;
+      } else if (e == EVENT_PIR_STATE_ON) { // 再度人を検知 タイマーリセットしない
+        Serial.println("handleEvent ret:STATE_EXIST_PENDIG");
+        ret = STATE_EXIST_PENDIG;
       } else {
         Serial.println("handleEvent:other");
         updateTimer();
+      }
+      break;
+    case STATE_EXIST_PENDIG:
+      Serial.println("handleEvent:STATE_EXIST_PENDIG");
+      if (e == EVENT_PIR_STATE_ON) { // 再度人を検知 タイマーリセット
+        Serial.println("handleEvent ret:STATE_EXIST");
+        ret = STATE_EXIST;
+        stopTimer();
+      } else if (e == EVENT_PIR_STATE_OFF) {   // 人がいなくなったら タイマーリセットしない
+        Serial.println("handleEvent ret:STATE_GONE");
+        ret = STATE_GONE;
       }
       break;
     case STATE_SLEEP:                   // 人を不検知となって一定時間経過後、照明・ACオフした状態
